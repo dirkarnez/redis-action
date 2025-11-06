@@ -11,6 +11,9 @@ redis-action
 ### Web UI
 - `https://${Tunnel ID}.devtunnels.ms:6379/`
 
+### Client libraries
+- [Connect with Redis client API libraries | Docs](https://redis.io/docs/latest/develop/clients/)
+
 ### Notes
 - `sudo chmod -R +x . && ./build.sh` in CI/CD .yaml file is good enough for running docker build on GitHub Action
 - too busy - use Docker image instead
