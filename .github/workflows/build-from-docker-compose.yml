@@ -19,19 +19,42 @@ jobs:
       - run: |
           curl https://aka.ms/TunnelsCliDownload/linux-x64 -L -J --output devtunnel
 
-      - run: |
-          sudo chmod -R +x . && \
-          ./devtunnel user login -g -d
-          
+
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
           
       - run: |
           npm i -g concurrently
+          
+      - run: |
+          cat <<EOF > server.js
+          #!/bin/bash
+          const http = require('http');
+          
+          const hostname = '127.0.0.1'; // Localhost
+          const port = 3000; // Port to listen on
+          
+          const server = http.createServer((req, res) => {
+            // Set the HTTP header for the response
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'text/plain');
+          
+            // Send the response body
+            res.end('Hello World from Node.js!\n');
+          });
+          
+          server.listen(port, hostname, () => {
+            console.log(`Server running at http://${hostname}:${port}/`);
+          });
+          EOF
+                
+      - run: |
+          sudo chmod -R +x . && \
+          ./devtunnel user login -g -d
       
       - run: |
-          concurrently "./devtunnel host -p 6379 --allow-anonymous --protocol auto" "docker compose up --build"
+          concurrently "./devtunnel host -p 6379 3000 --allow-anonymous --protocol auto" "docker compose up --build" "node ./server.js"
       
     # # continue-on-error: true
     #   - name: set permission and run
