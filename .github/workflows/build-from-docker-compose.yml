@@ -54,7 +54,7 @@ jobs:
           ./devtunnel user login -g -d
       
       - run: |
-          concurrently "./devtunnel host -p 6379 3000 --allow-anonymous --protocol auto" "docker compose up --build" "node ./server.js"
+          concurrently "./devtunnel host -p 6379 -p 3000 --allow-anonymous --protocol auto" "docker compose up --build" "node ./server.js"
       
     # # continue-on-error: true
     #   - name: set permission and run
